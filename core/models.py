@@ -3,10 +3,11 @@ from django.db import models
 
 class Job(models.Model):
     titulo = models.CharField(
-        max_length=100
+        max_length=100,
+        default=None
     )
     url = models.URLField(
-        null=True, blank=True
+        max_length=200
     )
 
     def __str__(self):
