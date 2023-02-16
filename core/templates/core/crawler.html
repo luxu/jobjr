@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block 'content' %}
+    <form action="{% url 'crawler_vagas' %}" method="post">
+        {% csrf_token %}
+        <div class="control">
+          <button class="button is-danger">Baixar</button>
+        </div>
+    </form>
+    <div>
+    {% if url_vagas %}
+        <p>
+            <h1>Listas das vagas do site: </h1>
+            <h3>{{ url_vagas }}</h3>
+        </p>
+        {% for vaga in vagas %}
+            <p>{{ vaga }}</p>
+        {% endfor %}
+    {% endif %}
+    </div>
+{% endblock 'content' %}
