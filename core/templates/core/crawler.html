@@ -1,20 +1,39 @@
 {% extends 'base.html' %}
 {% block 'content' %}
-    <form action="{% url 'crawler_vagas' %}" method="post">
-        {% csrf_token %}
-        <div class="control">
-          <button class="button is-danger">Baixar</button>
+    <div class="content">
+        <div class="field is-grouped">
+            <form action="{% url 'crawler_vagas' %}" method="post">
+                {% csrf_token %}
+                <p class="control">
+                    <button class="button is-danger">Baixar</button>
+                </p>
+            </form>
+            {% if url_vagas %}
+                <form method="get" action="{% url 'salvar' %}">
+                    <p class="control">
+                        <button class="button is-primary" type="submit">Salvar no BD</button>
+                    </p>
+                    <input type="hidden" name="vagas" value="{{ vagas_json }}">
+                </form>
+                <form method="get" action="{% url 'salvar_api' %}">
+                    <p class="control">
+                        <button class="button is-primary" type="submit">Mandar pra API</button>
+                    </p>
+                    <input type="hidden" name="vagas" value="{{ vagas_json }}">
+                </form>
         </div>
-    </form>
-    <div>
-    {% if url_vagas %}
-        <p>
-            <h1>Listas das vagas do site: </h1>
-            <h3>{{ url_vagas }}</h3>
-        </p>
-        {% for vaga in vagas %}
-            <p>{{ vaga }}</p>
-        {% endfor %}
-    {% endif %}
+            <article class="message is-info">
+                <div class="message-header has-text-centered">
+                    <p class="title">Listas das vagas do site: <a target="_blank" href="{{ url_vagas }}">{{ url_vagas }}</a></p>
+                </div>
+                <div class="message-body">
+                    <ol>
+                        {% for vaga in vagas %}
+                            <li>{{ vaga }}</li>
+                        {% endfor %}
+                    </ol>
+                </div>
+            </article>
+            {% endif %}
     </div>
 {% endblock 'content' %}

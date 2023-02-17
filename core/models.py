@@ -13,6 +13,14 @@ class Job(models.Model):
     def __str__(self):
         return self.titulo
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'titulo': self.titulo,
+            'url': self.url,
+        }
+
     class Meta:
         verbose_name = 'Vaga'
         verbose_name_plural = 'Vagas'
+
