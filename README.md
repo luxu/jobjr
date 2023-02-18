@@ -1,4 +1,4 @@
-# Project Template by Luxu
+# Project Template by Cars
 
 ## Como rodar o template?
 * Crie um virtualenv com Python.
