@@ -1,2 +1,2 @@
 release: python manage.py migrate
-web: gunicorn {{ project_name }}.wsgi --log-file -
+web: gunicorn jobjr.wsgi --log-file -
