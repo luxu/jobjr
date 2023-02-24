@@ -23,4 +23,4 @@ class Job(models.Model):
     class Meta:
         verbose_name = 'Vaga'
         verbose_name_plural = 'Vagas'
-
+        ordering = ['titulo']

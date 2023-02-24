@@ -4,17 +4,34 @@ from core.models import Job
 
 
 @pytest.fixture
-def job(db):
-    resultado = 'Programador - Delphi' \
-                'https://www.adzuna.com.br/land/ad/' \
-                '3875702246?se=QsRX1Eqs7RGIFziLgkel0A&v=FA4B9D64EAF9663C0668E522D547EE10C2323B36'
+def Vaga(db):
+    vagas = [
+        {
+            "titulo": "Desenvolvedor(a) Javascript Sênior",
+            "url": "https://programathor.com.br/jobs//28111-desenvolvedor-a-javascript-senior"
+        },
+        {
+            "titulo": "Desenvolvedor(a) Node.js Pleno",
+            "url": "https://programathor.com.br/jobs//28102-desenvolvedor-a-node-js-pleno"
+        }
+    ]
 
-    return Job.objects.create(
-        titulo=resultado.split('http')[0],
-        url=resultado.split('//')[1]
-    )
+    for vaga in vagas:
+        Job.objects.create(
+            titulo=vaga['titulo'],
+            url=vaga['url'],
+        )
+    return Job
 
 
-def test_default(job):
-    assert job.titulo == 'Programador - Delphi'
-    assert job.url == 'www.adzuna.com.br/land/ad/3875702246?se=QsRX1Eqs7RGIFziLgkel0A&v=FA4B9D64EAF9663C0668E522D547EE10C2323B36'
+def test_titulo(Vaga):
+    jobs = Vaga.objects.filter(id=1)
+    for job in jobs:
+        assert job.titulo == 'Desenvolvedor(a) Javascript Sênior'
+        assert job.url == "https://programathor.com.br/jobs//28111-desenvolvedor-a-javascript-senior"
+
+
+def test_deletar(Vaga):
+    jobs = Vaga.objects.all()
+    jobs.delete()
+    assert len(jobs) == 0
