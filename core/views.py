@@ -46,6 +46,20 @@ def crawler(request):
     }
     return render(request, template_name, context)
 
+def crawler_api(request):
+    BASE_URL = 'https://programathor.com.br/jobs/'
+    response = httpx.get(BASE_URL)
+    texto = parsel.Selector(response.text)
+    caixas = texto.css('.cell-list')
+    for caixa in caixas:
+        if url := caixa.css('a').xpath('@href').get():
+            titulo = caixa.css('.cell-list-content').css('h3::text').get()
+            url = ''.join((BASE_URL, url.split('jobs')[1]))
+            Job.objects.create(
+                titulo=titulo,
+                url=url
+            )
+    return JsonResponse('Dados salvos com sucesso!', status=HTTPStatus.CREATED, safe=False)
 
 def salvar(request):
     template_name = 'core/salvar.html'
@@ -61,9 +75,23 @@ def salvar(request):
     return render(request, template_name)
 
 
+@csrf_exempt
+def salvar_api(request):
+    titulo = request.POST.get('titulo')
+    url = request.POST.get('url')
+    if titulo:
+        data = {
+            'titulo': titulo,
+            'url': url
+        }
+        job = Job.objects.create(**data)
+        return JsonResponse(job.to_dict(), status=HTTPStatus.CREATED)
+    else:
+        return JsonResponse('Não veio os dados. Reveja!', status=HTTPStatus.BAD_REQUEST)
+
+
 def excluir(request):
-    vagas = Job.objects.all()
-    if vagas:
+    if vagas := Job.objects.all():
         vagas.delete()
         context = {'msg': "OK"}
     else:
@@ -81,18 +109,6 @@ def listar_api(request):
     page = paginator.get_page(page_number)
 
     return JsonResponse(page2dict(page))
-
-
-@csrf_exempt
-def salvar_api(request):
-    titulo = request.POST.get('titulo')
-    url = request.POST.get('url')
-    data = {
-        'titulo': titulo,
-        'url': url
-    }
-    job = Job.objects.create(**data)
-    return JsonResponse(job.to_dict(), status=HTTPStatus.CREATED)
 
 
 def page2dict(page):
