@@ -2,11 +2,10 @@ from django.urls import path
 
 from . import views
 
-
 urlpatterns = [
     path('', views.index, name='index'),
-    # path('crawler/', views.crawler, name='crawler'),
-    # path('salvar/', views.salvar, name='salvar'),
+    path('crawler/', views.crawler, name='crawler'),
+    path('salvar/', views.salvar, name='salvar'),
     path('v1/crawler/', views.crawler_api, name='crawler_api'),
     path('v1/crawler_github/', views.crawler_api_github, name='crawler_api_github'),
     path('v1/listar/', views.listar_api, name='listar_api'),
