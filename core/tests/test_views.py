@@ -4,6 +4,7 @@ import pytest
 from django.urls import reverse_lazy, reverse
 
 from core.models import Job
+import json
 
 CT_JSON = 'application/json'
 
@@ -44,6 +45,15 @@ def test_listar_api(client, Vaga):
     resp = client.get(reverse_lazy('listar_api'))
     assert resp.status_code == 200
     assert len(resp.json()['data']) == 2
+
+
+def test_listar_api_github(client, db):
+    client.get(reverse_lazy('crawler_api_github'))
+    jobs = Job.objects.all()
+    assert jobs is not None
+    jobs = None
+    resp = client.get(reverse_lazy('index'))
+    assert resp.status_code == 200
 
 
 def test_deletar_banco_vazio(client, db):

@@ -3,10 +3,13 @@ from http import HTTPStatus
 
 import httpx
 import parsel
+from decouple import config
 from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
+
+from github import Github
 
 from core.models import Job
 
@@ -59,6 +62,28 @@ def crawler_api(request):
                 titulo=titulo,
                 url=url
             )
+
+    return JsonResponse('Dados salvos com sucesso!', status=HTTPStatus.CREATED, safe=False)
+
+def crawler_api_github(request):
+    access_token = config("ACCESS_TOKEN_GOTHUB")
+    g = Github(access_token)
+    repo = g.get_repo("backend-br/vagas")
+
+    open_issues = repo.get_issues(state='open')
+    for issue in open_issues:
+        lista_labels = []
+        for label in issue.labels:
+            lista_labels.append(label.name)
+            if 'Sênior' not in lista_labels and 'Pleno' not in lista_labels:
+                titulo = issue.title
+                url = issue.html_url
+                labels = lista_labels
+                created_at = issue.created_at
+                Job.objects.create(
+                    titulo=titulo,
+                    url=url
+                )
     return JsonResponse('Dados salvos com sucesso!', status=HTTPStatus.CREATED, safe=False)
 
 def salvar(request):

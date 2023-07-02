@@ -92,3 +92,5 @@ STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+SERVER = config('SERVER_URL', default='http://localhost:8000/')
